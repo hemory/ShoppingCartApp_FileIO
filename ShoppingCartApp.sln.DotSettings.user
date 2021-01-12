@@ -1,0 +1,12 @@
+﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=62cf6546_002D913b_002D40ea_002Daf07_002D016f697fb27f/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="x" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::DB2CE6BD-3592-42FC-8D26-8EAF2F13A268::.NETFramework,Version=v4.6.2::ShoppingCartApp.UnitTests.ProductTests.DecreaseInventory_AlwaysReturns_ExpectedResult&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::DB2CE6BD-3592-42FC-8D26-8EAF2F13A268::.NETFramework,Version=v4.6.2::ShoppingCartApp.UnitTests.ShoppingCartTests.AddToCartBasedOnQuantity&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::DB2CE6BD-3592-42FC-8D26-8EAF2F13A268::.NETFramework,Version=v4.6.2::ShoppingCartApp.UnitTests.ShoppingCartTests.CalculateTotalCartPriceBeforeTax&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::DB2CE6BD-3592-42FC-8D26-8EAF2F13A268::.NETFramework,Version=v4.6.2::ShoppingCartApp.UnitTests.ShoppingCartTests.CalculateTotalCartPriceAfterTax&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::DB2CE6BD-3592-42FC-8D26-8EAF2F13A268::.NETFramework,Version=v4.6.2::ShoppingCartApp.UnitTests.ShoppingCartTests.CalculateTotalCartPriceAfterTax_AlwaysReturns_CorrectTotal&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::DB2CE6BD-3592-42FC-8D26-8EAF2F13A268::.NETFramework,Version=v4.6.2::ShoppingCartApp.UnitTests.ProductRepoTests.c&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::DB2CE6BD-3592-42FC-8D26-8EAF2F13A268::.NETFramework,Version=v4.6.2::ShoppingCartApp.UnitTests.FileHandlerTests.GetProducts_Always_ReturnsAListOfProductsFromTextFile&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>
