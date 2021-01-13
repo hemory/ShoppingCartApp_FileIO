@@ -61,6 +61,11 @@ namespace ShoppingCartApp
 
                             }
                         }
+                        else
+                        {
+                            Console.WriteLine("Please choose a valid option.");
+                            break;
+                        }
                     }
 
 
