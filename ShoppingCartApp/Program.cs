@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 
 namespace ShoppingCartApp
@@ -13,13 +14,72 @@ namespace ShoppingCartApp
             ShoppingCart cart = new ShoppingCart();
 
 
+            List<Administrator> admins = new List<Administrator>()
+            {
+                new Administrator("hem", 1234)
+            };
+
+            Console.WriteLine("Enter 'admin' to access admin menu or press any key to continue");
+            string accessAdminMenu = Console.ReadLine().ToLower().Trim();
+
+
+            if (accessAdminMenu == "admin")
+            {
+                bool isAdmin = false;
+
+                for (int i = 0; i <= 4; i++)
+                {
+                    Console.Write("User Name: ");
+                    string userName = Console.ReadLine();
+
+
+                    Console.Write("Pin: ");
+                    int pin = int.Parse(Console.ReadLine());
+
+
+                    foreach (var admin in admins)
+                    {
+                        if (userName == admin.UserName && pin == admin.Pin)
+                        {
+                            isAdmin = true;
+                            //todo admin menu
+                            Console.WriteLine("Your in!");
+                        }
+                        else
+                        {
+                            if (i <= 3)
+                            {
+                                Console.WriteLine("Invalid user name or pin. Try again."); 
+                            }
+                            break;
+                        }
+                    }
+
+
+                    if (isAdmin)
+                    {
+                      break;
+                    }
+                }
+
+                Console.WriteLine();
+                if (isAdmin == false)
+                {
+                    Console.WriteLine("Sorry, we cannot verify you as an admin."); 
+                }
+                Thread.Sleep(2000);
+                Console.Clear();
+
+            }
+
+
             string readyToCheckout;
             do
             {
                 Console.WriteLine($"Welcome to the Shopping Cart App! {Environment.NewLine}");
 
                 Console.WriteLine("Lets get you to our list...");
-                Thread.Sleep(1000);
+                Thread.Sleep(2000);
                 Console.Clear();
                 Console.WriteLine("Welcome to the Beverage Bodega!");
 
