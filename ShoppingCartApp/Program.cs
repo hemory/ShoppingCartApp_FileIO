@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net.Sockets;
 using System.Threading;
 
 namespace ShoppingCartApp
@@ -8,10 +10,13 @@ namespace ShoppingCartApp
     {
         static void Main(string[] args)
         {
-            string textFilePath = @"C:\Users\hphifer\source\repos\ShoppingCartApp_UnitTests\ShoppingCartApp_UnitTests\ShoppingCartApp\data.txt";
+            string textFilePath = @"C:\Users\hphifer\source\repos\ShoppingCart_FileIO\ShoppingCartApp\data.txt";
 
             ProductRepo productsFromRepo = new ProductRepo(textFilePath);
             ShoppingCart cart = new ShoppingCart();
+            var highestId = productsFromRepo.Products.Max(p => p.Id);
+            bool continueToRegularApp = true;
+
 
 
             List<Administrator> admins = new List<Administrator>()
@@ -36,14 +41,131 @@ namespace ShoppingCartApp
                     Console.Write("Pin: ");
                     int pin = int.Parse(Console.ReadLine());
 
+                    Thread.Sleep(2000);
+                    Console.Clear();
 
                     foreach (var admin in admins)
                     {
                         if (userName == admin.UserName && pin == admin.Pin)
                         {
                             isAdmin = true;
+                            bool keepGoing = true;
                             //todo admin menu
-                            Console.WriteLine("Your in!");
+                            while (keepGoing)
+                            {
+                                Console.WriteLine("[1]Add Product [2]Update Product Inventory [3]Delete Product");
+                                string adminChoice = Console.ReadLine().Trim();
+
+                                Thread.Sleep(1000);
+                                Console.Clear();
+
+                                switch (adminChoice)
+                                {
+                                    case "1":
+
+                                        Product product = new Product();
+
+                                        keepGoing = false;
+                                        product.Id = highestId + 1;
+                                        Console.Write("Name: ");
+                                        product.Name = Console.ReadLine().ToLower().Trim();
+
+                                        Console.Write("Description: ");
+                                        product.Description = Console.ReadLine().ToLower().Trim();
+
+                                        Console.Write("Category: ");
+                                        product.Category = Console.ReadLine().ToLower().Trim();
+
+                                        Console.Write("Price: ");
+                                        product.Price = double.Parse(Console.ReadLine().Trim());
+
+                                        Console.Write("Inventory: ");
+                                        product.Inventory = int.Parse(Console.ReadLine().Trim());
+
+                                        productsFromRepo.Products.Add(product);
+
+                                        Console.WriteLine();
+
+                                        Console.WriteLine("Here is your updated list.");
+
+                                        DisplayProductsForAdmin(productsFromRepo);
+
+                                        FileHandler.WriteDataToTextFile(textFilePath, productsFromRepo.Products);
+
+                                        break;
+
+                                    case "2":
+                                        keepGoing = false;
+
+                                        DisplayProductsForAdmin(productsFromRepo);
+                                        Console.Write("Please choose one to update: ");
+                                        int idToUpdate = int.Parse(Console.ReadLine());
+
+                                        Thread.Sleep(2000);
+                                        Console.Clear();
+
+                                        var productToUpdate = productsFromRepo.Products.Find(p => p.Id == idToUpdate);
+
+                                        productsFromRepo.Products.Remove(productToUpdate);
+                                        
+                                        Console.WriteLine($"The current inventory is {productToUpdate.Inventory}.");
+                                        Console.Write("How many would you like to add to the inventory: ");
+                                        productToUpdate.Inventory += int.Parse(Console.ReadLine());
+
+                                       productsFromRepo.Products.Add(productToUpdate);
+
+                                        Console.WriteLine("Here is your updated list.");
+
+                                        DisplayProductsForAdmin(productsFromRepo);
+
+                                        FileHandler.WriteDataToTextFile(textFilePath, productsFromRepo.Products);
+
+
+                                        break;
+
+                                    case "3":
+                                        keepGoing = false;
+                                        DisplayProducts(productsFromRepo);
+                                        Console.WriteLine();
+                                        Console.Write("Please choose one to delete: ");
+                                        int idToDelete = int.Parse(Console.ReadLine());
+
+                                        Thread.Sleep(2000);
+                                        Console.Clear();
+
+                                        var productToDelete = productsFromRepo.Products.Find(p => p.Id == idToDelete);
+
+                                        productsFromRepo.Products.Remove(productToDelete);
+
+                                        Console.WriteLine("Product has been removed. This is your current product list.");
+                                        Console.WriteLine();
+
+                                        DisplayProducts(productsFromRepo);
+
+                                        FileHandler.WriteDataToTextFile(textFilePath, productsFromRepo.Products);
+
+
+                                        Thread.Sleep(2000);
+                                        Console.Clear();
+
+                                        break;
+
+                                    default:
+                                        Console.WriteLine("Please choose a valid option");
+                                        break;
+                                }
+
+                                Thread.Sleep(2000);
+                                Console.Clear();
+
+                                Console.WriteLine("Return to Admin Menu? Enter [y] to return or any key to exit application.");
+                                string choiceToReturnToAdminMenu = Console.ReadLine().ToLower().Trim();
+
+                                if (choiceToReturnToAdminMenu == "y")
+                                {
+                                    keepGoing = false;
+                                }
+                            }
                         }
                         else
                         {
@@ -67,108 +189,122 @@ namespace ShoppingCartApp
                 {
                     Console.WriteLine("Sorry, we cannot verify you as an admin."); 
                 }
+
                 Thread.Sleep(2000);
                 Console.Clear();
+
+                Console.WriteLine("Continue to regular app? Enter [n] to exit or any key to continue to regular app.");
+                string response = Console.ReadLine().ToLower().Trim();
+
+                if (response == "n")
+                {
+                    continueToRegularApp = false;
+                }
+
+                Thread.Sleep(2000);
+                Console.Clear();
+                
 
             }
 
 
-            string readyToCheckout;
-            do
+            if (continueToRegularApp)
             {
-                Console.WriteLine($"Welcome to the Shopping Cart App! {Environment.NewLine}");
-
-                Console.WriteLine("Lets get you to our list...");
-                Thread.Sleep(2000);
-                Console.Clear();
-                Console.WriteLine("Welcome to the Beverage Bodega!");
-
-
-                bool willAddAnother = true;
-
-                while (willAddAnother)
+                string readyToCheckout;
+                do
                 {
-                    Console.WriteLine(Environment.NewLine);
-                    Console.WriteLine("Choose an option");
+                    Console.WriteLine($"Welcome to the Shopping Cart App! {Environment.NewLine}");
 
-                    Console.WriteLine("**********************************************************");
-                    DisplayProducts(productsFromRepo);
-                    Console.WriteLine();
-                    Console.WriteLine("**********************************************************");
-
-                    int itemChoice = int.Parse(Console.ReadLine());
+                    Console.WriteLine("Lets get you to our list...");
+                    Thread.Sleep(2000);
+                    Console.Clear();
+                    Console.WriteLine("Welcome to the Beverage Bodega!");
 
 
-                    foreach (var product in productsFromRepo.Products)
+                    bool willAddAnother = true;
+                    bool isValidChoice = false;
+
+                    while (willAddAnother)
                     {
-                        if (itemChoice == product.Id)
+                        Console.WriteLine(Environment.NewLine);
+                        Console.WriteLine("Choose an option");
+
+                        DisplayProducts(productsFromRepo);
+                        int itemChoice = int.Parse(Console.ReadLine());
+
+
+                        foreach (var product in productsFromRepo.Products)
                         {
-                            bool tooManySelected = true;
-                            while (tooManySelected)
+                            if (itemChoice == product.Id)
                             {
-                                Console.WriteLine("How many would you like?");
-                                int quantity = Convert.ToInt16(Console.ReadLine());
-
-                                if (quantity > product.Inventory)
+                                isValidChoice = true;
+                                bool tooManySelected = true;
+                                while (tooManySelected)
                                 {
-                                    Console.WriteLine($"There are only {Math.Abs(product.Inventory)} left in stock. Please choose fewer");
-                                    continue;
-                                }
-                                product.DecreaseInventory(quantity);
-                                cart.Products = cart.AddToCartBasedOnQuantity(quantity, product);
-                                Console.WriteLine($"{quantity } {product.Name}'s have been added to the cart.");
-                                tooManySelected = false;
+                                    Console.WriteLine("How many would you like?");
+                                    int quantity = Convert.ToInt16(Console.ReadLine());
 
+                                    if (quantity > product.Inventory)
+                                    {
+                                        Console.WriteLine($"There are only {Math.Abs(product.Inventory)} left in stock. Please choose fewer");
+                                        continue;
+                                    }
+                                    product.DecreaseInventory(quantity);
+                                    cart.Products = cart.AddToCartBasedOnQuantity(quantity, product);
+                                    Console.WriteLine($"{quantity } {product.Name}'s have been added to the cart.");
+                                    tooManySelected = false;
+
+                                }
                             }
                         }
-                        else
+
+                        if (isValidChoice == false)
                         {
-                            Console.WriteLine("Please choose a valid option.");
-                            break;
+                            continue;
                         }
+
+
+                        Thread.Sleep(1000);
+                        Console.Clear();
+                        Console.WriteLine("Would you like to add another item to your cart? (y)es or (n)o");
+                        string addAnotherItem = Console.ReadLine().ToLower().Trim();
+
+                        if (addAnotherItem != "y")
+                        {
+                            willAddAnother = false;
+                        }
+
+                        Console.Clear();
                     }
 
 
-                    Thread.Sleep(1000);
+                    Console.WriteLine("Are you ready to check out? (y)es or (n)o");
+                    readyToCheckout = Console.ReadLine().ToLower().Trim();
                     Console.Clear();
-                    Console.WriteLine("Would you like to add another item? (y)es or (n)o");
-                    string addAnotherItem = Console.ReadLine().ToLower().Trim();
 
-                    if (addAnotherItem != "y")
-                    {
-                        willAddAnother = false;
-                    }
-
-                    Console.Clear();
-                }
+                } while (readyToCheckout != "y");
 
 
-                Console.WriteLine("Are you ready to check out? (y)es or (n)o");
-                readyToCheckout = Console.ReadLine().ToLower().Trim();
+                double totalCartPriceBeforeTax = cart.CalculateTotalCartPriceBeforeTax();
+
+
+                Console.WriteLine($"The total cart price before tax is {totalCartPriceBeforeTax:C} {Environment.NewLine}");
+
+                Console.WriteLine($"*****Enter SAVEMONEY to save 10 percent****** {Environment.NewLine}");
+
+                Console.WriteLine("Please type in discount code or press Enter to continue");
+                Console.Write("Discount Code: ");
+                string discountCode = Console.ReadLine().ToUpper().Trim();
+
                 Console.Clear();
 
-            } while (readyToCheckout != "y");
-
-
-            double totalCartPriceBeforeTax = cart.CalculateTotalCartPriceBeforeTax();
-
-
-            Console.WriteLine($"The total cart price before tax is {totalCartPriceBeforeTax:C} {Environment.NewLine}");
-
-            Console.WriteLine($"*****Enter SAVEMONEY to save 10 percent****** {Environment.NewLine}");
-
-            Console.WriteLine("Please type in discount code or press Enter to continue");
-            Console.Write("Discount Code: ");
-            string discountCode = Console.ReadLine().ToUpper().Trim();
-
-            Console.Clear();
-
-            double totalCartPriceAfterTax =
-                cart.CalculateTotalCartPriceAfterTax(discountCode, totalCartPriceBeforeTax);
-            Console.WriteLine($"The new total cart price before tax is {totalCartPriceBeforeTax:C} {Environment.NewLine}");
-            Console.WriteLine($"The new total cart price after tax is {totalCartPriceAfterTax:C} {Environment.NewLine}");
-            Thread.Sleep(3000);
-            Console.Clear();
+                double totalCartPriceAfterTax =
+                    cart.CalculateTotalCartPriceAfterTax(discountCode, totalCartPriceBeforeTax);
+                Console.WriteLine($"The new total cart price before tax is {totalCartPriceBeforeTax:C} {Environment.NewLine}");
+                Console.WriteLine($"The new total cart price after tax is {totalCartPriceAfterTax:C} {Environment.NewLine}");
+                Thread.Sleep(3000);
+                Console.Clear(); 
+            }
 
 
             Console.WriteLine($"Thank you for choosing us! {Environment.NewLine}");
@@ -187,6 +323,7 @@ namespace ShoppingCartApp
         {
 
             int displayNumber = 1;
+            Console.WriteLine("**********************************************************");
 
             //display the repo
             foreach (var item in productRepo.Products)
@@ -195,6 +332,26 @@ namespace ShoppingCartApp
 
                 displayNumber++;
             }
+            Console.WriteLine("**********************************************************");
+            Console.WriteLine();
+
+        }
+
+        private static void DisplayProductsForAdmin(ProductRepo productRepo)
+        {
+
+            int displayNumber = 1;
+            Console.WriteLine("**********************************************************");
+
+            //display the repo
+            foreach (var item in productRepo.Products)
+            {
+                Console.WriteLine($"({displayNumber}) {item.Name.ToUpper()} | {item.Description.ToUpper()} | {item.Category.ToUpper()} | {item.Price} | {item.Inventory}");
+
+                displayNumber++;
+            }
+            Console.WriteLine("**********************************************************");
+            Console.WriteLine();
 
         }
 
