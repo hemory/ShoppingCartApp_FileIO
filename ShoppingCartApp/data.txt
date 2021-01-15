@@ -1,5 +1,6 @@
-2|latte|The fancy variety|coffee|2.5|7
 3|tea|Meditation in a cup|tea|1.25|9
 4|redbull|energy|beverage|4.5|2
-1|black coffee|Just the basic coffee|coffee|2.5|10
 5|juice|yummy|beverage|2|3
+1|black coffee|Just the basic coffee|coffee|2.5|10
+2|latte|The fancy variety|coffee|2.5|9
+6|carrot juice|health|health|5|5
